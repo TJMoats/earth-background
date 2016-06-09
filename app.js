@@ -2,10 +2,8 @@ var CronJob = require('cron').CronJob;
 var moment = require('moment');
 var fs = require('fs-extra');
 var request = require('request');
-var Canvas = require('canvas'),
-	Image = Canvas.Image,
-	canvas = new Canvas(200, 200),
-	ctx = canvas.getContext('2d');
+var Canvas = require('canvas');
+var Image = Canvas.Image;
 var wallpaper = require('wallpaper');
 var async = require("async");
 
