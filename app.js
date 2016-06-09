@@ -117,7 +117,10 @@ function run(cb){
 	async.series([
 		getImageBlocks,
 		stitchImageBlocks,
-		setBackground
+		setBackground,
+	    function(){
+		    cb(null);
+	    }
 	]);
 }
 
