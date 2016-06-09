@@ -1,3 +1,4 @@
 node_modules
 .idea
 images
+.DS_Store
