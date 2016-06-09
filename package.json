@@ -1,0 +1,17 @@
+{
+  "name": "earthview",
+  "version": "1.0.0",
+  "description": "Every 5 minutes sets your desktop to the most recent image from the Himawari-8 satelite.",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "cron": "^1.1.0",
+    "fs-extra": "^0.30.0",
+    "moment": "^2.13.0",
+    "request": "^2.72.0",
+    "wallpaper": "^2.1.1"
+  },
+  "devDependencies": {},
+  "author": "TJ Moats <TJ@moats.io> (moats.io)",
+  "license": "MIT"
+}
