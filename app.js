@@ -13,7 +13,7 @@ var numblocks     = 4; //this apparently corresponds directly with the level, ke
 var canvas_size   = width * numblocks;
 var local_storage = __dirname + '/images/';
 
-var desktop_width = 1920;
+var desktop_width  = 1920;
 var desktop_height = 1080;
 
 function init(cb) {
@@ -56,9 +56,10 @@ function getImageBlocks(cb) {
 function stitchImageBlocks(cb) {
 	console.log('Stitching image blocks.');
 
-	var max_size = desktop_width < desktop_height ? desktop_width : desktop_height;
+	var max_size     = desktop_width < desktop_height ? desktop_width : desktop_height;
 	var default_size = width * numblocks;
-	var scale = max_size / default_size;
+	var scale        = max_size / default_size;
+	var hor_offset   = (desktop_width - max_size) / 2;
 
 	var out_file = 'latest_' + moment().format('YYYYMMDDHHmm') + '.png';
 	var canvas   = new Canvas(desktop_width, desktop_height),
@@ -77,7 +78,7 @@ function stitchImageBlocks(cb) {
 
 			var img    = new Image;
 			img.onload = function () {
-				ctx.drawImage(img, x * width, y * width, img.width, img.height);
+				ctx.drawImage(img, (x * width * scale) + hor_offset, (y * width * scale), img.width * scale, img.height * scale);
 				if ((counter++) >= numblocks * numblocks) {
 					canvas.toBuffer(function (err, buf) {
 						if (err) {
@@ -107,7 +108,7 @@ function setBackground(file_name, cb) {
 	});
 }
 
-function cleanUp(cb){
+function cleanUp(cb) {
 	fs.emptyDir(local_storage, function (err) {
 		if (err) {
 			cb(err);
@@ -125,8 +126,8 @@ function download(uri, filename, callback) {
 
 function run(cb) {
 	console.log('Running task.');
-	cleanUp(function(err){
-		if (err){
+	cleanUp(function (err) {
+		if (err) {
 			throw err;
 		}
 		getImageBlocks(function (err) {
@@ -158,7 +159,7 @@ init(function (err) {
 	}
 
 	run(function (err) {
-		if (err){
+		if (err) {
 			throw err;
 		} else {
 			console.log('Done.');
