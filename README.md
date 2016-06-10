@@ -25,8 +25,4 @@ The background is 2200x2200 by default, but you can change that in the code.
 
 1. Check compatibility on Windows
 2. Check compatibility on Nix
-3. Allow custom resolutions
-4. Allow multiple monitors
-5. Allow custom timer
-6. Add padding to match custom resolution
-7. Add info for automating script (Cron, service, ect)
+3. Allow multiple monitors
