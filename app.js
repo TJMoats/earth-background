@@ -64,6 +64,8 @@ function stitchImageBlocks(cb) {
 	var out_file = 'latest_' + moment().format('YYYYMMDDHHmm') + '.png';
 	var canvas   = new Canvas(desktop_width, desktop_height),
 	    ctx      = canvas.getContext('2d');
+	ctx.fillStyle="#000000";
+	ctx.fillRect(0,0,desktop_width, desktop_height);
 
 	var counter = 1;
 	for (var y = 0; y < numblocks; y++) {
