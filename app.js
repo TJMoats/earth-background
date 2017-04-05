@@ -12,6 +12,7 @@ var level         = "4d"; //Level can be 4d, 8d, 16d, 20d
 var numblocks     = 4; //this apparently corresponds directly with the level, keep this exactly the same as level without the 'd'
 var canvas_size   = width * numblocks;
 var local_storage = __dirname + '/images/';
+var delete_old_backgrounds = false;
 
 var desktop_width  = 1920;
 var desktop_height = 1080;
@@ -74,27 +75,28 @@ function stitchImageBlocks(cb) {
 
 			//check to make sure the images exist
 			if (!fs.existsSync(local_storage + 'block' + file_name, fs.F_OK)) {
-				console.err('File missing. Aborting.');
-				return false;
+				cb(new error('File missing. Aborting.'));
 			}
 
 			var img    = new Image;
 			img.onload = function () {
 				ctx.drawImage(img, (x * width * scale) + hor_offset, (y * width * scale), img.width * scale, img.height * scale);
+
 				if ((counter++) >= numblocks * numblocks) {
 					canvas.toBuffer(function (err, buf) {
 						if (err) {
 							cb(err);
 						} else {
 							console.log('Writing file ' + local_storage + out_file);
+							fs.writeFile(local_storage + out_file, buf, function (err) {
+								if (err) {
+									cb(err);
+								} else {
+									cb(null, out_file);
+								}
+							});
 						}
-						fs.writeFile(local_storage + out_file, buf, function (err) {
-							if (err) {
-								cb(err);
-							} else {
-								cb(null, out_file);
-							}
-						});
+					
 					});
 				}
 			};
@@ -111,6 +113,7 @@ function setBackground(file_name, cb) {
 }
 
 function cleanUp(cb) {
+	console.log('Cleaning up old files.');
 	fs.emptyDir(local_storage, function (err) {
 		if (err) {
 			cb(err);
@@ -121,6 +124,7 @@ function cleanUp(cb) {
 }
 
 function download(uri, filename, callback) {
+	console.log('Downloading ' + uri + ' to local file ' + filename);
 	request.head(uri, function (err, res, body) {
 		request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
 	});
@@ -128,22 +132,19 @@ function download(uri, filename, callback) {
 
 function run(cb) {
 	console.log('Running task.');
-	cleanUp(function (err) {
-		if (err) {
-			throw err;
-		}
+
+	if (!delete_old_backgrounds){
 		getImageBlocks(function (err) {
 			if (err) {
-				throw err;
+				cb(err)
 			} else {
 				stitchImageBlocks(function (err, filename) {
-					console.log(filename);
 					if (err) {
-						throw err;
+						cb(err)
 					} else {
 						setBackground(filename, function (err) {
 							if (err) {
-								throw err;
+								cb(err)
 							} else {
 								cb(null)
 							}
@@ -152,16 +153,44 @@ function run(cb) {
 				})
 			}
 		});
-	});
+	} else {
+		cleanUp(function (err) {
+			if (err) {
+				cb(err)
+			}
+			getImageBlocks(function (err) {
+				if (err) {
+					cb(err)
+				} else {
+					stitchImageBlocks(function (err, filename) {
+						if (err) {
+							cb(err)
+						} else {
+							setBackground(filename, function (err) {
+								if (err) {
+									cb(err)
+								} else {
+									cb(null)
+								}
+							})
+						}
+					})
+				}
+			});
+		});
+	}
+	
 }
 
 init(function (err) {
 	if (err) {
+		console.err(err);
 		throw err;
 	}
 
 	run(function (err) {
 		if (err) {
+			console.err(err);
 			throw err;
 		} else {
 			console.log('Done.');
