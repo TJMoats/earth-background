@@ -76,6 +76,7 @@ function stitchImageBlocks(cb) {
 			//check to make sure the images exist
 			if (!fs.existsSync(local_storage + 'block' + file_name, fs.F_OK)) {
 				cb(new error('File missing. Aborting.'));
+				return;
 			}
 
 			var img    = new Image;
