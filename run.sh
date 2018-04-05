@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/local/bin/node /Users/jmoats/Development/earth-background/app.js
+/usr/local/bin/node /Path/To/Repo/earth-background/app.js
