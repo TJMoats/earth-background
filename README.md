@@ -3,7 +3,15 @@ Sets your desktop to the most recent image from the Himawari-8 satelite.
 
 ## Installation
 
-### Mac/Linux
+### Mac
+Clone the repo and run:
+
+```bash
+$ brew install pkg-config cairo libpng jpeg giflib
+$ npm install
+```
+
+### Linux
 Clone the repo and run:
 
 ```bash
